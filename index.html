@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Sailor Search</h1>
+
+    <!-- gifs here -->
+    <div id="Sailor-view"></div>
+
+    <!-- buttons here  -->
+    <div id="buttons-view"></div>
+
+    <form id="sailor-form">
+      <label for="sailor-input">Add a Sailor Scout</label>
+      <input type="text" id="sailor-input">
+      <br>
+
+      <!-- new buttons -->
+      <input id="add-sailor" type="submit" value="Add a Sailor Scout">
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+      //  array of scouts
+      var Scouts = ["Sailor Moon", "Sailor Venus", "Sailor Saturn", "Chibi Moon"];
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// this isnt working
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + Scouts + "&api_key=y2XAEctic0EZhpbrSBfCaB8jOk5s4rPt&limit=10";
+
+// Perfoming an AJAX GET request to our queryURL
+$.ajax({
+  url: queryURL,
+  method: "GET"
+})
+
+.then(function(response) {
+  console.log(response);
+
+  var imageUrl = response.data.image_original_url;
+
+
+  var sailorImage = $("<img>");
+
+  
+  sailorImage.attr("src", imageUrl);
+  sailorImage.attr("alt", "sailor image");
+
+  $("#Sailor-view").prepend(sailorImage);
+  
+});
+////////////////////////////////////////////////////////////////////////////////
+      function renderButtons() {
+       
+        $("#buttons-view").empty();
+
+        // Looping through the array of Scouts
+        for (var i = 0; i < Scouts.length; i++) {
+          var a = $("<button>");
+          a.addClass("movie-btn");
+          a.attr("data-name", Scouts[i]);
+          a.text(Scouts[i]);
+          $("#buttons-view").append(a);
+        }
+      }
+
+      $("#add-sailor").on("click", function(event) {
+        event.preventDefault();
+        var scout = $("#sailor-input").val().trim();
+
+        Scouts.push(scout);
+
+        renderButtons();
+      });
+      
+      $(document).on("click", ".movie-btn", displaySailorScout);
+
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
